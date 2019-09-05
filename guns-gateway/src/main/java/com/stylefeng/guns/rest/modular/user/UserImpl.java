@@ -1,7 +1,7 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import org.apache.catalina.User;
+import com.stylefeng.guns.api.user.UserApi;
 import org.springframework.stereotype.Component;
 
 /**
