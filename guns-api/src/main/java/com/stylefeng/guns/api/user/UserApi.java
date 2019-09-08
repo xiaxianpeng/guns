@@ -7,4 +7,12 @@ package com.stylefeng.guns.api.user;
 public interface UserApi {
 
     boolean login(String username, String password);
+
+    boolean register(UserModel userModel);
+
+    boolean checkUsername(String username);
+
+    UserInfoModel getUserInfo(int uuid);
+
+    UserInfoModel updateUserInfoModel(UserInfoModel userInfoModel);
 }
