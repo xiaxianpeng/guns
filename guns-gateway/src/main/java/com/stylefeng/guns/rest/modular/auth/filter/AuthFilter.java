@@ -45,7 +45,7 @@ public class AuthFilter extends OncePerRequestFilter {
         String ignoreUrl = jwtProperties.getIgnoreUrl();
         String[] ignoreUrls = null;
         if (ignoreUrl.contains(",")) {
-            ignoreUrl.split(",");
+            ignoreUrls = ignoreUrl.split(",");
         } else {
             ignoreUrls = new String[]{ignoreUrl};
         }
