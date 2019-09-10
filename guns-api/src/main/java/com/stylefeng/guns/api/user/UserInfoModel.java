@@ -20,6 +20,15 @@ public class UserInfoModel {
     private String headAddress;
     private long beginTime;
     private long updateTime;
+    private Integer uuid;
+
+    public Integer getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(Integer uuid) {
+        this.uuid = uuid;
+    }
 
     public String getUsername() {
         return username;
