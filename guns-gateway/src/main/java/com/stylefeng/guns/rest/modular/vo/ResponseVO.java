@@ -24,6 +24,13 @@ public class ResponseVO<M> {
         return responseVO;
     }
 
+    public static <M> ResponseVO success(String message) {
+        ResponseVO responseVO = new ResponseVO();
+        responseVO.setStatus(1);
+        responseVO.setMsg(message);
+        return responseVO;
+    }
+
     public static <M> ResponseVO serviceFaild(String msg) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setMsg(msg);
