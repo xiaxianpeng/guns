@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * on 2019-09-06 01:15
  */
 @Component
-@Service(interfaceClass = UserApi.class)
+@Service(interfaceClass = UserApi.class, loadbalance = "roundrobin")
 public class UserServiceImpl implements UserApi {
 
     @Autowired
