@@ -1,12 +1,12 @@
 package com.stylefeng.guns.api.user;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Created by xianpeng.xia
  * on 2019-09-09 00:10
  */
-public class UserInfoModel {
+public class UserInfoModel implements Serializable {
 
     private String username;
     private String nickName;
