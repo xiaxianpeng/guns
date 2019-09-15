@@ -5,13 +5,22 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.film.FilmServiceApi;
 import com.stylefeng.guns.api.film.vo.BannerVO;
+import com.stylefeng.guns.api.film.vo.CatVO;
 import com.stylefeng.guns.api.film.vo.FilmInfo;
 import com.stylefeng.guns.api.film.vo.FilmVO;
+import com.stylefeng.guns.api.film.vo.SourceVO;
+import com.stylefeng.guns.api.film.vo.YearVO;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.persistence.dao.BannerMapper;
+import com.stylefeng.guns.rest.persistence.dao.CatDictMapper;
 import com.stylefeng.guns.rest.persistence.dao.FilmMapper;
+import com.stylefeng.guns.rest.persistence.dao.SourceDictMapper;
+import com.stylefeng.guns.rest.persistence.dao.YearDictMapper;
 import com.stylefeng.guns.rest.persistence.model.Banner;
+import com.stylefeng.guns.rest.persistence.model.CatDict;
 import com.stylefeng.guns.rest.persistence.model.Film;
+import com.stylefeng.guns.rest.persistence.model.SourceDict;
+import com.stylefeng.guns.rest.persistence.model.YearDict;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +39,13 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
 
     @Autowired
     private FilmMapper filmMapper;
+
+    @Autowired
+    private CatDictMapper catDictMapper;
+    @Autowired
+    private SourceDictMapper sourceDictMapper;
+    @Autowired
+    private YearDictMapper yearDictMapper;
 
     @Override
     public List<BannerVO> getBanners() {
@@ -127,5 +143,44 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         List films = filmMapper.selectPage(page, entityWrapper);
         List<FilmInfo> filmInfos = getFilmInfos(films);
         return filmInfos;
+    }
+
+    @Override
+    public List<CatVO> getCats() {
+        List<CatDict> catDicts = catDictMapper.selectList(null);
+        List<CatVO> catVOs = new ArrayList<>();
+        for (CatDict catDict : catDicts) {
+            CatVO catVO = new CatVO();
+            catVO.setCatId(catDict.getUuid() + "");
+            catVO.setCatName(catDict.getShowName());
+            catVOs.add(catVO);
+        }
+        return catVOs;
+    }
+
+    @Override
+    public List<SourceVO> getSources() {
+        List<SourceDict> sourceDicts = sourceDictMapper.selectList(null);
+        List<SourceVO> sourceVOs = new ArrayList<>();
+        for (SourceDict sourceDict : sourceDicts) {
+            SourceVO sourceVO = new SourceVO();
+            sourceVO.setSourceId(sourceDict.getUuid() + "");
+            sourceVO.setSourceName(sourceDict.getShowName());
+            sourceVOs.add(sourceVO);
+        }
+        return sourceVOs;
+    }
+
+    @Override
+    public List<YearVO> getYears() {
+        List<YearDict> yearDicts = yearDictMapper.selectList(null);
+        List<YearVO> yearVOs = new ArrayList<>();
+        for (YearDict yearDict : yearDicts) {
+            YearVO yearVO = new YearVO();
+            yearVO.setYearId(yearDict.getUuid() + "");
+            yearVO.setYearName(yearDict.getShowName());
+            yearVOs.add(yearVO);
+        }
+        return yearVOs;
     }
 }
