@@ -1,7 +1,5 @@
 package com.stylefeng.guns.rest.common;
 
-import com.stylefeng.guns.api.user.UserInfoModel;
-
 /**
  * Created by xianpeng.xia
  * on 2019-09-10 23:38
