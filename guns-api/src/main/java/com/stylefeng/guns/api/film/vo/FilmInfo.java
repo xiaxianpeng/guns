@@ -1,5 +1,6 @@
 package com.stylefeng.guns.api.film.vo;
 
+import java.io.Serializable;
 import lombok.Data;
 
 /**
@@ -7,7 +8,7 @@ import lombok.Data;
  * on 2019/9/15 5:47 下午
  */
 @Data
-public class FilmInfo {
+public class FilmInfo implements Serializable {
 
     private String filmId;
     private int filmType;
