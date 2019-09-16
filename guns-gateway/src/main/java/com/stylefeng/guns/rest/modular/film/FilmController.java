@@ -3,10 +3,12 @@ package com.stylefeng.guns.rest.modular.film;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.film.FilmServiceApi;
 import com.stylefeng.guns.api.film.vo.CatVO;
+import com.stylefeng.guns.api.film.vo.FilmVO;
 import com.stylefeng.guns.api.film.vo.SourceVO;
 import com.stylefeng.guns.api.film.vo.YearVO;
 import com.stylefeng.guns.rest.modular.film.vo.FilmConditionVO;
 import com.stylefeng.guns.rest.modular.film.vo.FilmIndexVO;
+import com.stylefeng.guns.rest.modular.film.vo.FilmRequestVO;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +33,8 @@ public class FilmController {
     public ResponseVO getIndex() {
         FilmIndexVO filmIndexVO = new FilmIndexVO();
         filmIndexVO.setBanners(filmServiceApi.getBanners());
-        filmIndexVO.setHotFilms(filmServiceApi.getHotFilms(true, 8));
-        filmIndexVO.setSoonFilms(filmServiceApi.getSoonFilms(true, 8));
+        filmIndexVO.setHotFilms(filmServiceApi.getHotFilms(true, 8, 1, 1, 99, 99, 99));
+        filmIndexVO.setSoonFilms(filmServiceApi.getSoonFilms(true, 8, 1, 1, 99, 99, 99));
         filmIndexVO.setBoxRanking(filmServiceApi.getBoxRanking());
         filmIndexVO.setExpectRanking(filmServiceApi.getExceptRanking());
         filmIndexVO.setTop100(filmServiceApi.getTop());
@@ -106,5 +108,27 @@ public class FilmController {
         filmConditionVO.setSourceInfo(sourceResult);
         filmConditionVO.setYearInfo(yearResult);
         return ResponseVO.success(filmConditionVO);
+    }
+
+    @GetMapping("getFilms")
+    public ResponseVO getFilms(FilmRequestVO filmRequestVO) {
+        FilmVO filmVO = null;
+        switch (filmRequestVO.getShowType()) {
+            case 1:
+                filmVO = filmServiceApi.getHotFilms(false, filmRequestVO.getPageSize(), filmRequestVO.getNowPage(), filmRequestVO.getSortId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
+                    filmRequestVO.getCatId());
+                break;
+            case 2:
+                filmVO = filmServiceApi.getSoonFilms(false, filmRequestVO.getPageSize(), filmRequestVO.getNowPage(), filmRequestVO.getSortId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
+                    filmRequestVO.getCatId());
+                break;
+            case 3:
+                filmVO = filmServiceApi.getClassicFilms(filmRequestVO.getPageSize(), filmRequestVO.getNowPage(), filmRequestVO.getSortId(), filmRequestVO.getSourceId(), filmRequestVO.getYearId(),
+                    filmRequestVO.getCatId());
+                break;
+            default:
+                break;
+        }
+        return ResponseVO.success(IMG_PRE, filmVO);
     }
 }

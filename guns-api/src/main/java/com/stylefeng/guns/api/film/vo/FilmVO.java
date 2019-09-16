@@ -9,7 +9,7 @@ import lombok.Data;
  * on 2019/9/15 5:46 下午
  */
 @Data
-public class FilmVO implements Serializable {
+public class FilmVO extends Page implements Serializable {
 
     private int filmNum;
     private List<FilmInfo> filmInfos;

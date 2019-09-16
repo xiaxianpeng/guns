@@ -79,40 +79,96 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
         return filmInfos;
     }
 
-    @Override
-    public FilmVO getHotFilms(boolean isLimit, int nums) {
+    private FilmVO getFilms(int filmStatus, boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
         FilmVO filmVO = new FilmVO();
         List<FilmInfo> filmInfos = new ArrayList<>();
         EntityWrapper<Film> entityWrapper = new EntityWrapper<>();
-        entityWrapper.eq("film_status", 1);
+        entityWrapper.eq("film_status", filmStatus);
+        // 是否首页展示
         if (isLimit) {
             Page<Film> page = new Page<>(1, nums);
             List<Film> films = filmMapper.selectPage(page, entityWrapper);
             filmInfos = getFilmInfos(films);
             filmVO.setFilmNum(films.size());
         } else {
+            // 1 按热门搜索 2 按时间搜索 3 按评价搜索
+            String orderField = "film_time";
+            switch (sortId) {
+                case 1:
+                    switch (filmStatus) {
+                        case 1:
+                            orderField = "film_box_office";
+                            break;
+                        case 2:
+                            orderField = "film_preSaleNum";
+                            break;
+                        case 3:
+                            orderField = "film_box_office";
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 2:
+                    orderField = "film_time";
+                    break;
+                case 3:
+                    switch (filmStatus) {
+                        case 1:
+                            orderField = "film_box_office";
+                            break;
+                        case 2:
+                            orderField = "film_preSaleNum";
+                            break;
+                        case 3:
+                            orderField = "film_score";
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            Page<Film> page = new Page<>(nowPage, nums, orderField);
 
+            if (sourceId != 99) {
+                entityWrapper.eq("film_source", sourceId);
+            }
+            if (yearId != 99) {
+                entityWrapper.eq("film_date", yearId);
+            }
+            if (catId != 99) {
+                // #2#4#22#
+                String catStr = "%#" + catId + "#%";
+                entityWrapper.like("film_cats", catStr);
+            }
+            List<Film> films = filmMapper.selectPage(page, entityWrapper);
+            filmInfos = getFilmInfos(films);
+            filmVO.setFilmNum(films.size());
+            // totalPage = totalCount / nums + 1
+            int totalCounts = filmMapper.selectCount(entityWrapper);
+            int totalPage = (totalCounts % nums) == 0 ? (totalCounts / nums) : (totalCounts / nums) + 1;
+            filmVO.setTotalPage(totalPage);
+            filmVO.setNowPage(nowPage);
         }
         filmVO.setFilmInfos(filmInfos);
         return filmVO;
     }
 
     @Override
-    public FilmVO getSoonFilms(boolean isLimit, int nums) {
-        FilmVO filmVO = new FilmVO();
-        List<FilmInfo> filmInfos = new ArrayList<>();
-        EntityWrapper<Film> entityWrapper = new EntityWrapper<>();
-        entityWrapper.eq("film_status", 2);
-        if (isLimit) {
-            Page<Film> page = new Page<>(1, nums);
-            List<Film> films = filmMapper.selectPage(page, entityWrapper);
-            filmInfos = getFilmInfos(films);
-            filmVO.setFilmNum(films.size());
-        } else {
+    public FilmVO getHotFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
+        return getFilms(1, isLimit, nums, nowPage, sortId, sourceId, yearId, catId);
+    }
 
-        }
-        filmVO.setFilmInfos(filmInfos);
-        return filmVO;
+    @Override
+    public FilmVO getSoonFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
+        return getFilms(2, isLimit, nums, nowPage, sortId, sourceId, yearId, catId);
+    }
+
+    @Override
+    public FilmVO getClassicFilms(int nums, int nowPage, int sortId, int sourceId, int yearId, int catId) {
+        return getFilms(3, false, nums, nowPage, sortId, sourceId, yearId, catId);
     }
 
     @Override

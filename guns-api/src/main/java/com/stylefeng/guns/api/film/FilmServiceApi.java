@@ -22,12 +22,17 @@ public interface FilmServiceApi {
     /**
      * 热映电影
      */
-    FilmVO getHotFilms(boolean isLimit, int nums);
+    FilmVO getHotFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId);
 
     /**
      * 即将上映电影
      */
-    FilmVO getSoonFilms(boolean isLimit, int nums);
+    FilmVO getSoonFilms(boolean isLimit, int nums, int nowPage, int sortId, int sourceId, int yearId, int catId);
+
+    /**
+     * 经典影片
+     */
+    FilmVO getClassicFilms(int nums, int nowPage, int sortId, int sourceId, int yearId, int catId);
 
     /**
      * @return 票房排行榜
