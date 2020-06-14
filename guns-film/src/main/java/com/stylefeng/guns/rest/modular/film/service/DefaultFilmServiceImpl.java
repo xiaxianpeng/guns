@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.film.FilmServiceApi;
 import com.stylefeng.guns.api.film.vo.BannerVO;
 import com.stylefeng.guns.api.film.vo.CatVO;
+import com.stylefeng.guns.api.film.vo.FilmDetailVO;
 import com.stylefeng.guns.api.film.vo.FilmInfo;
 import com.stylefeng.guns.api.film.vo.FilmVO;
 import com.stylefeng.guns.api.film.vo.SourceVO;
@@ -238,5 +239,11 @@ public class DefaultFilmServiceImpl implements FilmServiceApi {
             yearVOs.add(yearVO);
         }
         return yearVOs;
+    }
+
+    @Override
+    public FilmDetailVO getFilmDetail(int searchType, String searchParam) {
+        // searchType : 1 按名称 2 按
+        return null;
     }
 }

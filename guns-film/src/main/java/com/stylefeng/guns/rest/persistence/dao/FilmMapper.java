@@ -1,7 +1,9 @@
 package com.stylefeng.guns.rest.persistence.dao;
 
+import com.stylefeng.guns.api.film.vo.FilmDetailVO;
 import com.stylefeng.guns.rest.persistence.model.Film;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface FilmMapper extends BaseMapper<Film> {
 
+    FilmDetailVO getFilmDetailByName(@Param("filmName") String filmName);
+
+    FilmDetailVO getFilmDetailById(@Param("uuid") String uuid);
 }

@@ -2,6 +2,7 @@ package com.stylefeng.guns.api.film;
 
 import com.stylefeng.guns.api.film.vo.BannerVO;
 import com.stylefeng.guns.api.film.vo.CatVO;
+import com.stylefeng.guns.api.film.vo.FilmDetailVO;
 import com.stylefeng.guns.api.film.vo.FilmInfo;
 import com.stylefeng.guns.api.film.vo.FilmVO;
 import com.stylefeng.guns.api.film.vo.SourceVO;
@@ -63,4 +64,6 @@ public interface FilmServiceApi {
      * 年代条件
      */
     List<YearVO> getYears();
+
+    FilmDetailVO getFilmDetail(int searchType, String searchParam);
 }
