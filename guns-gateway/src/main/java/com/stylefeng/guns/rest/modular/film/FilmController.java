@@ -1,6 +1,8 @@
 package com.stylefeng.guns.rest.modular.film;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.stylefeng.guns.api.film.FilmAsyncServiceApi;
 import com.stylefeng.guns.api.film.FilmServiceApi;
 import com.stylefeng.guns.api.film.vo.ActorRequestVO;
 import com.stylefeng.guns.api.film.vo.ActorVO;
@@ -18,6 +20,8 @@ import com.stylefeng.guns.rest.modular.film.vo.FilmRequestVO;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +37,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilmController {
 
     private static final String IMG_PRE = "www.baidu.com/";
+
     @Reference(interfaceClass = FilmServiceApi.class)
     private FilmServiceApi filmServiceApi;
+
+    @Reference(interfaceClass = FilmAsyncServiceApi.class, async = true)
+    private FilmAsyncServiceApi filmAsyncServiceApi;
 
     @GetMapping("getIndex")
     public ResponseVO getIndex() {
@@ -140,24 +148,31 @@ public class FilmController {
     }
 
     @GetMapping("film/${searchParam}")
-    public ResponseVO film(@PathVariable("searchParam") String searchParam, int searchType) {
+    public ResponseVO film(@PathVariable("searchParam") String searchParam, int searchType) throws ExecutionException, InterruptedException {
         FilmDetailVO filmDetail = filmServiceApi.getFilmDetail(searchType, searchParam);
 
         String filmId = filmDetail.getFilmId();
-        ActorVO dictInfo = filmServiceApi.getDictInfo(filmId);
-        List<ActorVO> actors = filmServiceApi.getActors(filmId);
-        FilmDescVO filmDesc = filmServiceApi.getFilmDesc(filmId);
-        ImgVO imgs = filmServiceApi.getImgs(filmId);
+        filmAsyncServiceApi.getDictInfo(filmId);
+        Future<ActorVO> actorVOFuture = RpcContext.getContext().getFuture();
+
+        filmAsyncServiceApi.getActors(filmId);
+        Future<List<ActorVO>> actorsFuture = RpcContext.getContext().getFuture();
+
+        filmAsyncServiceApi.getFilmDesc(filmId);
+        Future<FilmDescVO> filmDescFuture = RpcContext.getContext().getFuture();
+
+        filmAsyncServiceApi.getImgs(filmId);
+        Future<ImgVO> imgsFuture = RpcContext.getContext().getFuture();
 
         ActorRequestVO actorRequestVO = new ActorRequestVO();
-        actorRequestVO.setActors(actors);
-        actorRequestVO.setDirector(dictInfo);
+        actorRequestVO.setActors(actorsFuture.get());
+        actorRequestVO.setDirector(actorVOFuture.get());
 
         InfoRequestVO info04 = new InfoRequestVO();
         info04.setFilmId(filmId);
         info04.setActors(actorRequestVO);
-        info04.setBiography(filmDesc.getBiography());
-        info04.setImg(imgs);
+        info04.setBiography(filmDescFuture.get().getBiography());
+        info04.setImg(imgsFuture.get());
 
         filmDetail.setInfo04(info04);
         return ResponseVO.success(IMG_PRE, filmDetail);
