@@ -1,10 +1,13 @@
 package com.stylefeng.guns.api.film;
 
+import com.stylefeng.guns.api.film.vo.ActorVO;
 import com.stylefeng.guns.api.film.vo.BannerVO;
 import com.stylefeng.guns.api.film.vo.CatVO;
+import com.stylefeng.guns.api.film.vo.FilmDescVO;
 import com.stylefeng.guns.api.film.vo.FilmDetailVO;
 import com.stylefeng.guns.api.film.vo.FilmInfo;
 import com.stylefeng.guns.api.film.vo.FilmVO;
+import com.stylefeng.guns.api.film.vo.ImgVO;
 import com.stylefeng.guns.api.film.vo.SourceVO;
 import com.stylefeng.guns.api.film.vo.YearVO;
 import java.util.List;
@@ -65,5 +68,25 @@ public interface FilmServiceApi {
      */
     List<YearVO> getYears();
 
+    /**
+     * 获取影片信息
+     */
     FilmDetailVO getFilmDetail(int searchType, String searchParam);
+
+    /**
+     * 获取影片描述信息
+     */
+    FilmDescVO getFilmDesc(String filmId);
+
+    ImgVO getImgs(String filmId);
+
+    /**
+     * 获取导演信息
+     */
+    ActorVO getDictInfo(String filmId);
+
+    /**
+     * 获取演员信息
+     */
+    List<ActorVO> getActors(String filmId);
 }

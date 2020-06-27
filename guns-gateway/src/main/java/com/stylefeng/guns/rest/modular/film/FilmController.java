@@ -2,8 +2,14 @@ package com.stylefeng.guns.rest.modular.film;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.film.FilmServiceApi;
+import com.stylefeng.guns.api.film.vo.ActorRequestVO;
+import com.stylefeng.guns.api.film.vo.ActorVO;
 import com.stylefeng.guns.api.film.vo.CatVO;
+import com.stylefeng.guns.api.film.vo.FilmDescVO;
+import com.stylefeng.guns.api.film.vo.FilmDetailVO;
 import com.stylefeng.guns.api.film.vo.FilmVO;
+import com.stylefeng.guns.api.film.vo.ImgVO;
+import com.stylefeng.guns.api.film.vo.InfoRequestVO;
 import com.stylefeng.guns.api.film.vo.SourceVO;
 import com.stylefeng.guns.api.film.vo.YearVO;
 import com.stylefeng.guns.rest.modular.film.vo.FilmConditionVO;
@@ -135,6 +141,25 @@ public class FilmController {
 
     @GetMapping("film/${searchParam}")
     public ResponseVO film(@PathVariable("searchParam") String searchParam, int searchType) {
-        return null;
+        FilmDetailVO filmDetail = filmServiceApi.getFilmDetail(searchType, searchParam);
+
+        String filmId = filmDetail.getFilmId();
+        ActorVO dictInfo = filmServiceApi.getDictInfo(filmId);
+        List<ActorVO> actors = filmServiceApi.getActors(filmId);
+        FilmDescVO filmDesc = filmServiceApi.getFilmDesc(filmId);
+        ImgVO imgs = filmServiceApi.getImgs(filmId);
+
+        ActorRequestVO actorRequestVO = new ActorRequestVO();
+        actorRequestVO.setActors(actors);
+        actorRequestVO.setDirector(dictInfo);
+
+        InfoRequestVO info04 = new InfoRequestVO();
+        info04.setFilmId(filmId);
+        info04.setActors(actorRequestVO);
+        info04.setBiography(filmDesc.getBiography());
+        info04.setImg(imgs);
+
+        filmDetail.setInfo04(info04);
+        return ResponseVO.success(IMG_PRE, filmDetail);
     }
 }

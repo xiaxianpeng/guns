@@ -20,18 +20,39 @@
   </resultMap>
 
   <select id="getFilmDetailByName" parameterType="java.lang.String" resultType="com.stylefeng.guns.api.film.vo.FilmDetailVO">
-      SELECT film.film_name as filmName,
-            info.film_en_name as filmEnName,
-            film.img_address as imgAddress,
-            film.film_score as score,
-            info.film_box_office as totalBox,
-            film.film_cats as info01,
-            concat(film.film_source,' / ',info.film_length,'分钟') as info02,
-            concat(film.film_time,' / ',film.film_source,'上映') as info03,
-      from film film,film_info info
-      where film.uuid = info.film_id and film.uuid = #{uuid};
+      SELECT film.film_name as filmId,
+             film.film_name                                                                                        as filmName,
+             info.film_en_name                                                                                     as filmEnName,
+             film.img_address                                                                                      as imgAddress,
+             film.film_score                                                                                       as score,
+             film.film_box_office as totalBox,
+             (select group_concat(show_name)
+              from cat_dict t
+              where find_in_set(t.uuid, (select replace(trim(both '#' from film_cats), '#', ',') from film)))      as info01,
+             concat((select show_name from source_dict s where s.uuid = film.uuid), ' / ', info.film_length, '分钟') as info02,
+             concat(film.film_time, ' / ', (select show_name from source_dict s where s.uuid = film.uuid), '上映')   as info03
+      from film film,
+           film_info info
+      where film.uuid = info.film_id
+        and film.uuid = #{uuid};
   </select>
 
-  <select id="getFilmDetailById" parameterType="java.lang.String" resultType="com.stylefeng.guns.api.film.vo.FilmDetailVO"></select>
+  <select id="getFilmDetailById" parameterType="java.lang.String" resultType="com.stylefeng.guns.api.film.vo.FilmDetailVO">
+      SELECT film.film_name as filmId,
+             film.film_name                                                                                        as filmName,
+             info.film_en_name                                                                                     as filmEnName,
+             film.img_address                                                                                      as imgAddress,
+             film.film_score                                                                                       as score,
+             film.film_box_office as totalBox,
+             (select group_concat(show_name)
+              from cat_dict t
+              where find_in_set(t.uuid, (select replace(trim(both '#' from film_cats), '#', ',') from film)))      as info01,
+             concat((select show_name from source_dict s where s.uuid = film.uuid), ' / ', info.film_length, '分钟') as info02,
+             concat(film.film_time, ' / ', (select show_name from source_dict s where s.uuid = film.uuid), '上映')   as info03
+      from film film,
+           film_info info
+      where film.uuid = info.film_id
+        and film.film_name = like '%#{fileName}%';
+  </select>
 
 </mapper>
