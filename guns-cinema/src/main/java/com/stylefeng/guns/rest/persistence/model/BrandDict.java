@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author 夏先鹏
- * @since 2020-06-29
+ * @since 2020-06-30
  */
 @TableName("brand_dict")
 public class BrandDict extends Model<BrandDict> {

@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author 夏先鹏
- * @since 2020-06-29
+ * @since 2020-06-30
  */
 public interface CinemaMapper extends BaseMapper<Cinema> {
 

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author 夏先鹏
- * @since 2020-06-29
+ * @since 2020-06-30
  */
 @TableName("hall_film_info")
 public class HallFilmInfo extends Model<HallFilmInfo> {

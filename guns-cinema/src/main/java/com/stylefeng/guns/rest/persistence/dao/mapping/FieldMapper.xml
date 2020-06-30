@@ -2,16 +2,81 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.stylefeng.guns.rest.persistence.dao.FieldMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.stylefeng.guns.rest.persistence.model.Field">
-        <id column="UUID" property="uuid" />
-        <result column="cinema_id" property="cinemaId" />
-        <result column="film_id" property="filmId" />
-        <result column="begin_time" property="beginTime" />
-        <result column="end_time" property="endTime" />
-        <result column="hall_id" property="hallId" />
-        <result column="hall_name" property="hallName" />
-        <result column="price" property="price" />
-    </resultMap>
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="com.stylefeng.guns.rest.persistence.model.Field">
+    <id column="UUID" property="uuid"/>
+    <result column="cinema_id" property="cinemaId"/>
+    <result column="film_id" property="filmId"/>
+    <result column="begin_time" property="beginTime"/>
+    <result column="end_time" property="endTime"/>
+    <result column="hall_id" property="hallId"/>
+    <result column="hall_name" property="hallName"/>
+    <result column="price" property="price"/>
+  </resultMap>
+
+  <resultMap id="FilmInfoMap" type="com.stylefeng.guns.api.cinema.vo.FilmInfoVO">
+    <result column="film_id" property="filmId"/>
+    <result column="film_name" property="filmName"/>
+    <result column="film_length" property="filmLength"/>
+    <result column="film_cats" property="filmCats"/>
+    <result column="actors" property="actors"/>
+    <result column="film_language" property="filmType"/>
+    <result column="img_address" property="imgAddress"/>
+
+    <collection property="filmFields" ofType="com.stylefeng.guns.api.cinema.vo.FilmFieldVO">
+      <result column="uuid" property="fieldId"/>
+      <result column="begin_time" property="beginTime"/>
+      <result column="end_time" property="endTime"/>
+      <result column="hall_name" property="hallName"/>
+      <result column="film_language" property="language"/>
+      <result column="price" property="price"/>
+    </collection>
+
+  </resultMap>
+
+  <select id="getFilmInfos" resultMap="FilmInfoMap" resultType="com.stylefeng.guns.api.cinema.vo.FilmInfoVO">
+      select info.film_id,
+             info.film_name,
+             info.film_length,
+             info.film_language,
+             info.film_cats,
+             info.actors,
+             info.img_address,
+             f.uuid,
+             f.begin_time,
+             f.end_time,
+             f.hall_name,
+             f.price
+      from hall_film_info info
+               left join field f on info.film_id = f.film_id
+      where f.film_id = #{cinemaId}
+  </select>
+
+  <select id="getHallInfo" resultType="com.stylefeng.guns.api.cinema.vo.HallInfoVO">
+      select f.UUID            as hallFieldId,
+             f.hall_name       as hallName,
+             f.price,
+             hall.seat_address as seatAddress
+      from hall_dict hall,
+           field f
+      where f.hall_id = hall.UUID
+        and f.UUID = #{field}
+  </select>
+
+  <select id="getFilmInfoById" resultMap="FilmInfoMap" resultType="com.stylefeng.guns.api.cinema.vo.FilmInfoVO">
+       select info.film_id,
+              info.film_name,
+              info.film_length,
+              info.film_language,
+              info.film_cats,
+              info.actors,
+              info.img_address,
+              f.film_id as filmId
+       from hall_film_info info,
+            field f
+       where info.film_id = f.film_id
+       and f.UUID = #{filmId}
+
+  </select>
 
 </mapper>

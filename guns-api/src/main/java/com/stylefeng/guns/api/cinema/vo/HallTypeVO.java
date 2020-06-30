@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class HallTypeVO implements Serializable {
 
-    private Integer hallTypeId;
+    private String hallTypeId;
     private String hallTypeName;
     private Boolean isActive;
 }

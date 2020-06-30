@@ -8,6 +8,7 @@ import com.stylefeng.guns.api.cinema.vo.CinemaQueryVO;
 import com.stylefeng.guns.api.cinema.vo.CinemaVO;
 import com.stylefeng.guns.api.cinema.vo.FilmFieldVO;
 import com.stylefeng.guns.api.cinema.vo.FilmInfoVO;
+import com.stylefeng.guns.api.cinema.vo.HallInfoVO;
 import com.stylefeng.guns.api.cinema.vo.HallTypeVO;
 import java.util.List;
 
@@ -33,10 +34,10 @@ public interface CinemaServiceApi {
     CinemaInfoVO getCinemaInfoById(int cinemaId);
 
     // 获取所有电影的信息和对应的放映场次信息，根据影院编号
-    FilmInfoVO getFilmInfoByCinemaId(int cinemaId);
+    List<FilmInfoVO> getFilmInfoByCinemaId(int cinemaId);
 
     // 根据放映场次ID获取放映信息
-    FilmFieldVO getFilmFieldInfo(int fieldId);
+    HallInfoVO getFilmFieldInfo(int fieldId);
 
     // 根据放映场次查询播放的电影编号，然后根据电影编号获取对应的电影信息
     FilmInfoVO getFilmInfoByFieldId(int fieldId);
