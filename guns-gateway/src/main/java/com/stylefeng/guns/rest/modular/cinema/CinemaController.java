@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cinema/")
 public class CinemaController {
 
-    @Reference(interfaceClass = CinemaServiceApi.class, check = false)
+    @Reference(interfaceClass = CinemaServiceApi.class, cache = "lru", check = false)
     private CinemaServiceApi cinemaServiceApi;
     private static final String img_pre = "www.baidu.com";
 
